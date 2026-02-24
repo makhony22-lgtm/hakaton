@@ -1,66 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Авторизация</title>
+<title>Вход</title>
+<style>
+body{display:flex;height:100vh;justify-content:center;align-items:center;background:#f4f6fb;font-family:Segoe UI}
+.box{background:white;padding:40px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.1);width:320px;text-align:center}
+input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #ddd}
+button{width:100%;padding:10px;margin-top:10px;border:none;border-radius:8px;background:#4f46e5;color:white;cursor:pointer}
+button:hover{background:#3730a3}
+</style>
 </head>
 <body>
 
-<h2>Вход / Регистрация</h2>
-
-<input type="email" id="email" placeholder="Email"><br><br>
-<input type="password" id="password" placeholder="Пароль"><br><br>
-
-<button onclick="register()">Регистрация</button>
+<div class="box">
+<h2>UniGuide</h2>
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Пароль">
 <button onclick="login()">Вход</button>
+<button onclick="register()">Регистрация</button>
+</div>
 
-<script type="module">
-import { auth, db } from "./js/firebase.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } 
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { doc, setDoc } 
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-window.register = async function() {
-  const email = emailInput.value;
-  const password = passwordInput.value;
-
-  const userCred = await createUserWithEmailAndPassword(auth, email, password);
-
-  // 🔥 создаём профиль
-  await setDoc(doc(db, "users", userCred.user.uid), {
-    email: userCred.user.email,
-    createdAt: new Date(),
-    language: "ru"
-  });
-
-  window.location.href = "index.html";
-}
-
-window.login = async function() {
-  const email = emailInput.value;
-  const password = passwordInput.value;
-
-  await signInWithEmailAndPassword(auth, email, password);
-  window.location.href = "index.html";
-}
-
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-
- 
-import { auth } from "./js/firebase.js";
-import { onAuthStateChanged } 
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-// Если уже авторизован — сразу на главную
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    window.location.href = "index.html";
-  }
-});
-
-</script>
-
+<script type="module" src="./auth.js"></script>
 </body>
 </html>
