@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Главная</title>
+<style>
+body { font-family: Arial; margin: 20px; }
+header { display:flex; justify-content:space-between; }
+.cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:15px; margin-top:20px; }
+.card { background:white; padding:15px; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1); cursor:pointer;}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    👤 <span id="userEmail"></span>
+    <button onclick="logout()">Выйти</button>
+  </div>
+
+  <div>
+    <button onclick="startTest()">Тест</button>
+    <button onclick="changeLanguage()">🌍 Язык</button>
+  </div>
+</header>
+
+<h2>Подбор ВУЗа</h2>
+
+<select id="cityFilter">
+  <option value="">Город</option>
+  <option value="Алматы">Алматы</option>
+  <option value="Астана">Астана</option>
+</select>
+
+<input type="number" id="entFilter" placeholder="Баллы ЕНТ">
+<button onclick="filterCards()">Найти</button>
+
+<div class="cards" id="cards"></div>
+
+<script type="module">
+import { auth } from "./js/firebase.js";
+import { onAuthStateChanged, signOut } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+const universities = [
+  { name:"КазНУ", city:"Алматы", ent:110 },
+  { name:"ENU", city:"Астана", ent:95 }
+];
+
+function render(data){
+  cards.innerHTML="";
+  data.forEach(u=>{
+    cards.innerHTML+=`
+      <div class="card">
+        <h3>${u.name}</h3>
+        <p>${u.city}</p>
+        <p>Баллы: ${u.ent}</p>
+      </div>
+    `;
+  });
+}
+
+window.filterCards=function(){
+  const city=cityFilter.value;
+  const ent=entFilter.value;
+
+  const filtered=universities.filter(u=>
+    (!city||u.city===city) &&
+    (!ent||u.ent<=ent)
+  );
+
+  render(filtered);
+}
+
+window.startTest=function(){
+  alert("Здесь будет тест на профориентацию");
+}
+
+window.changeLanguage=function(){
+  alert("Здесь будет смена языка");
+}
+
+window.logout=function(){
+  signOut(auth);
+  window.location.href="login.html";
+}
+
+onAuthStateChanged(auth,user=>{
+  if(user){
+    userEmail.innerText=user.email;
+  }else{
+    window.location.href="login.html";
+  }
+});
+
+render(universities);
+</script>
+
+</body>
+</html>
