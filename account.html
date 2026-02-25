@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Профиль - Jumys AI</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="main-page">
+
+<header class="main-header">
+  <div class="logo-section">
+    <div class="logo">💼</div>
+    <span class="brand-name">Jumys AI</span>
+  </div>
+  
+  <div class="search-section"></div>
+  
+  <div class="user-section">
+    <button onclick="location.href='index.html'" class="btn-secondary">Главная</button>
+    <button onclick="logout()" class="btn-primary">Выйти</button>
+  </div>
+</header>
+
+<main class="content">
+  <div class="profile-container">
+    <h2>Профиль пользователя</h2>
+    
+    <!-- Профиль студента -->
+    <div id="studentProfile" style="display: none;">
+      <div class="profile-section">
+        <label>ФИО:</label>
+        <p id="profileFullName">-</p>
+      </div>
+      
+      <div class="profile-section">
+        <label>Возраст:</label>
+        <p id="profileAge">-</p>
+      </div>
+      
+      <div class="profile-section">
+        <label>Образование:</label>
+        <p id="profileEducation">-</p>
+      </div>
+      
+      <div class="profile-section">
+        <label>Опыт работы:</label>
+        <p id="profileWorkExperience">-</p>
+      </div>
+      
+      <div class="profile-section">
+        <label>Навыки:</label>
+        <p id="profileSkills">-</p>
+      </div>
+    </div>
+    
+    <!-- Профиль работодателя -->
+    <div id="employerProfile" style="display: none;">
+      <div class="profile-section">
+        <label>Название компании:</label>
+        <input type="text" id="companyName" placeholder="Введите название компании">
+      </div>
+      
+      <div class="profile-section">
+        <label>Описание компании:</label>
+        <textarea id="companyDescription" rows="5" placeholder="Расскажите о вашей компании..."></textarea>
+      </div>
+      
+      <button onclick="saveEmployerProfile()" class="btn-primary" style="width: 100%; margin-top: 20px;">Сохранить профиль</button>
+      
+      <hr style="margin: 40px 0; border: 1px solid var(--glass-border);">
+      
+      <h3 style="margin-bottom: 20px;">Создать вакансию</h3>
+      
+      <div class="profile-section">
+        <label>Название вакансии:</label>
+        <input type="text" id="jobTitle" placeholder="Например: Frontend разработчик">
+      </div>
+      
+      <div class="profile-section">
+        <label>Город:</label>
+        <select id="jobLocation">
+          <option value="Алматы">Алматы</option>
+          <option value="Астана">Астана</option>
+          <option value="Шымкент">Шымкент</option>
+          <option value="Караганда">Караганда</option>
+        </select>
+      </div>
+      
+      <div class="profile-section">
+        <label>Описание вакансии:</label>
+        <textarea id="jobDescription" rows="5" placeholder="Опишите обязанности и требования..."></textarea>
+      </div>
+      
+      <div class="profile-section">
+        <label>Требования (через запятую):</label>
+        <input type="text" id="jobRequirements" placeholder="JavaScript, React, CSS">
+      </div>
+      
+      <div class="profile-section">
+        <label>Зарплата:</label>
+        <input type="text" id="jobSalary" placeholder="200,000 - 300,000 ₸">
+      </div>
+      
+      <div class="profile-section">
+        <label>Тип занятости:</label>
+        <select id="jobType">
+          <option value="Полная занятость">Полная занятость</option>
+          <option value="Частичная занятость">Частичная занятость</option>
+          <option value="Стажировка">Стажировка</option>
+        </select>
+      </div>
+      
+      <button onclick="createJob()" class="btn-primary" style="width: 100%; margin-top: 20px;">Опубликовать вакансию</button>
+    </div>
+  </div>
+</main>
+
+<script type="module" src="./account.js"></script>
+</body>
+</html>

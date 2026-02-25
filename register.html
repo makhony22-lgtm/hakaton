@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Регистрация - Jumys AI</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="box">
+<h2>Jumys AI</h2>
+<p class="subtitle">Регистрация</p>
+
+<div class="role-selection">
+  <label class="role-option">
+    <input type="radio" name="role" value="Student" id="roleStudent" checked>
+    <span>Студент</span>
+  </label>
+  <label class="role-option">
+    <input type="radio" name="role" value="Employer" id="roleEmployer">
+    <span>Работодатель</span>
+  </label>
+</div>
+
+<input type="text" id="fullName" placeholder="ФИО/Логин">
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Пароль">
+<button onclick="register()">Зарегистрироваться</button>
+
+<div class="links">
+  <a href="login.html">Уже есть аккаунт? Войти</a>
+</div>
+</div>
+
+<script type="module" src="./register.js"></script>
+</body>
+</html>

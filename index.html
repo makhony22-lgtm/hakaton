@@ -2,21 +2,36 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Главная</title>
-  <link rel="stylesheet" href="styles.css">
+<title>Jumys AI - Вакансии</title>
+<link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="main-page">
 
-<header>
-<div>👤 <span id="userEmail"></span></div>
-<div>
-<button onclick="logout()">Выйти</button>
-</div>
+<header class="main-header">
+  <div class="logo-section">
+    <div class="logo">💼</div>
+    <span class="brand-name">Jumys AI</span>
+  </div>
+  
+  <div class="search-section">
+    <input type="text" id="searchBar" placeholder="Поиск вакансий..." />
+    <select id="filterLocation">
+      <option value="">Все города</option>
+      <option value="Алматы">Алматы</option>
+      <option value="Астана">Астана</option>
+      <option value="Шымкент">Шымкент</option>
+    </select>
+  </div>
+  
+  <div class="user-section" id="userSection">
+    <button onclick="location.href='login.html'" class="btn-secondary">Войти</button>
+    <button onclick="location.href='register.html'" class="btn-primary">Регистрация</button>
+  </div>
 </header>
 
-<h2>Подбор ВУЗа</h2>
-
-<div class="cards" id="cards"></div>
+<main class="content">
+  <div class="cards" id="cards"></div>
+</main>
 
 <script type="module" src="./main.js"></script>
 </body>
