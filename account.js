@@ -48,15 +48,17 @@ function renderProfile(profile) {
     document.getElementById("studentProfile").style.display = "block";
     document.getElementById("employerProfile").style.display = "none";
     
-    document.getElementById("profileFullName").textContent = profile.fullName || "-";
-    document.getElementById("profileAge").textContent = profile.age || "-";
-    document.getElementById("profileEducation").textContent = profile.education || "-";
-    document.getElementById("profileWorkExperience").textContent = profile.workExperience || "-";
+    document.getElementById("profileFullName").value = profile.fullName || "";
+    document.getElementById("profileAge").value = profile.age || "";
+    document.getElementById("profileEducation").value = profile.education || "";
+    document.getElementById("profileWorkExperience").value = profile.workExperience || "";
     
     const skills = profile.skills && profile.skills.length > 0 
       ? profile.skills.join(", ") 
-      : "-";
-    document.getElementById("profileSkills").textContent = skills;
+      : "";
+    document.getElementById("profileSkills").value = skills;
+    document.getElementById("profileDesiredPosition").value = profile.desiredPosition || "";
+    document.getElementById("profileDesiredLocation").value = profile.desiredLocation || "";
   } else if (profile.role === "Employer") {
     document.getElementById("studentProfile").style.display = "none";
     document.getElementById("employerProfile").style.display = "block";
@@ -65,6 +67,43 @@ function renderProfile(profile) {
     document.getElementById("companyDescription").value = profile.companyDescription || "";
   }
 }
+
+window.saveStudentProfile = async function() {
+  try {
+    const fullName = document.getElementById("profileFullName").value.trim();
+    const age = document.getElementById("profileAge").value.trim();
+    const education = document.getElementById("profileEducation").value.trim();
+    const workExperience = document.getElementById("profileWorkExperience").value.trim();
+    const skillsInput = document.getElementById("profileSkills").value.trim();
+    const desiredPosition = document.getElementById("profileDesiredPosition").value.trim();
+    const desiredLocation = document.getElementById("profileDesiredLocation").value;
+    
+    if (!fullName || !age || !education || !workExperience || !skillsInput) {
+      showMessage("Заполните все обязательные поля", true);
+      return;
+    }
+    
+    const skillsArray = skillsInput.split(",").map(s => s.trim()).filter(s => s);
+    
+    await setDoc(doc(db, "users", auth.currentUser.uid), {
+      ...currentUserProfile,
+      fullName: fullName,
+      age: parseInt(age),
+      education: education,
+      workExperience: workExperience,
+      skills: skillsArray,
+      desiredPosition: desiredPosition,
+      desiredLocation: desiredLocation,
+      resumeCompleted: true,
+      updatedAt: new Date().toISOString()
+    });
+    
+    showMessage("Резюме сохранено!", false);
+  } catch (error) {
+    console.error("Ошибка сохранения резюме:", error);
+    showMessage("Ошибка сохранения резюме", true);
+  }
+};
 
 window.saveEmployerProfile = async function() {
   try {

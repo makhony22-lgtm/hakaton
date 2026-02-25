@@ -5,6 +5,7 @@ import { collection, getDocs, doc, getDoc } from "https://www.gstatic.com/fireba
 const cards = document.getElementById("cards");
 const searchBar = document.getElementById("searchBar");
 const filterLocation = document.getElementById("filterLocation");
+const filterEmploymentType = document.getElementById("filterEmploymentType");
 const userSection = document.getElementById("userSection");
 
 let allJobs = [];
@@ -25,6 +26,24 @@ async function loadJobs() {
   }
 }
 
+function calculateMatchScore(job, userSkills) {
+  if (!userSkills || userSkills.length === 0 || !job.requirements) {
+    return 0;
+  }
+  
+  const jobRequirements = job.requirements.map(r => r.toLowerCase());
+  const skills = userSkills.map(s => s.toLowerCase());
+  
+  let matches = 0;
+  skills.forEach(skill => {
+    if (jobRequirements.some(req => req.includes(skill) || skill.includes(req))) {
+      matches++;
+    }
+  });
+  
+  return matches;
+}
+
 function renderJobs(jobs) {
   cards.innerHTML = "";
   
@@ -33,24 +52,39 @@ function renderJobs(jobs) {
     return;
   }
   
-  jobs.forEach(job => {
+  // Сортируем вакансии по совпадению навыков для студентов
+  let sortedJobs = [...jobs];
+  if (currentUserProfile && currentUserProfile.role === "Student" && currentUserProfile.skills) {
+    sortedJobs = sortedJobs.map(job => ({
+      ...job,
+      matchScore: calculateMatchScore(job, currentUserProfile.skills)
+    })).sort((a, b) => b.matchScore - a.matchScore);
+  }
+  
+  sortedJobs.forEach(job => {
     const requirements = job.requirements && job.requirements.length > 0
       ? job.requirements.map(req => `<span class="tag">${req}</span>`).join('')
       : '';
     
+    const matchBadge = job.matchScore > 0 
+      ? `<div class="match-badge">Совпадений: ${job.matchScore}</div>` 
+      : '';
+    
     cards.innerHTML += `
-      <div class="card job-card">
+      <div class="card job-card ${job.matchScore > 0 ? 'recommended' : ''}">
+        ${matchBadge}
         <h3 class="job-title">${job.title || 'Без названия'}</h3>
         <p class="company-name">${job.company || '-'}</p>
         <p class="location">📍 ${job.location || '-'}</p>
         <p class="salary">💰 ${job.salaryRange || '-'}</p>
+        <p class="employment-type">⏰ ${job.employmentType || '-'}</p>
         <div class="requirements">${requirements}</div>
       </div>
     `;
   });
 }
 
-function searchJobs(query, locationFilter) {
+function searchJobs(query, locationFilter, employmentTypeFilter) {
   let filtered = allJobs;
   
   if (query) {
@@ -69,15 +103,23 @@ function searchJobs(query, locationFilter) {
     filtered = filtered.filter(job => job.location === locationFilter);
   }
   
+  if (employmentTypeFilter) {
+    filtered = filtered.filter(job => job.employmentType === employmentTypeFilter);
+  }
+  
   renderJobs(filtered);
 }
 
 searchBar.addEventListener("input", (e) => {
-  searchJobs(e.target.value, filterLocation.value);
+  searchJobs(e.target.value, filterLocation.value, filterEmploymentType.value);
 });
 
 filterLocation.addEventListener("change", (e) => {
-  searchJobs(searchBar.value, e.target.value);
+  searchJobs(searchBar.value, e.target.value, filterEmploymentType.value);
+});
+
+filterEmploymentType.addEventListener("change", (e) => {
+  searchJobs(searchBar.value, filterLocation.value, e.target.value);
 });
 
 window.logout = function() {

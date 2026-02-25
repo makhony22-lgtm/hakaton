@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Создание резюме - Jumys AI</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="box onboarding-box">
+<h2>Создайте своё резюме</h2>
+<p class="subtitle">Ответьте на несколько вопросов, чтобы мы могли подобрать вам подходящие вакансии</p>
+
+<div id="onboardingForm">
+  <div class="profile-section">
+    <label>Ваш возраст:</label>
+    <input type="number" id="age" placeholder="Например: 22" min="16" max="70">
+  </div>
+  
+  <div class="profile-section">
+    <label>Образование:</label>
+    <textarea id="education" rows="3" placeholder="Например: КазНУ, Информатика, 4 курс"></textarea>
+  </div>
+  
+  <div class="profile-section">
+    <label>Опыт работы:</label>
+    <textarea id="workExperience" rows="4" placeholder="Опишите ваш опыт работы или напишите 'Нет опыта'"></textarea>
+  </div>
+  
+  <div class="profile-section">
+    <label>Навыки (через запятую):</label>
+    <input type="text" id="skills" placeholder="JavaScript, Python, Photoshop, Excel">
+    <small style="color: var(--text-muted); display: block; margin-top: 8px;">
+      Укажите ваши профессиональные навыки, языки программирования, инструменты
+    </small>
+  </div>
+  
+  <div class="profile-section">
+    <label>Желаемая должность:</label>
+    <input type="text" id="desiredPosition" placeholder="Например: Frontend разработчик">
+  </div>
+  
+  <div class="profile-section">
+    <label>Желаемый город работы:</label>
+    <select id="desiredLocation">
+      <option value="">Любой город</option>
+      <option value="Алматы">Алматы</option>
+      <option value="Астана">Астана</option>
+      <option value="Шымкент">Шымкент</option>
+      <option value="Караганда">Караганда</option>
+    </select>
+  </div>
+  
+  <button onclick="saveResume()" class="btn-primary" style="width: 100%; margin-top: 20px;">
+    Сохранить резюме и перейти к вакансиям
+  </button>
+</div>
+</div>
+
+<script type="module" src="./onboarding.js"></script>
+</body>
+</html>

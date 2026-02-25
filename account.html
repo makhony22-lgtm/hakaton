@@ -9,7 +9,7 @@
 
 <header class="main-header">
   <div class="logo-section">
-    <div class="logo">💼</div>
+    <img src="media/logo.png" alt="Jumys AI" class="logo-img">
     <span class="brand-name">Jumys AI</span>
   </div>
   
@@ -27,30 +27,50 @@
     
     <!-- Профиль студента -->
     <div id="studentProfile" style="display: none;">
+      <h3 style="margin-bottom: 20px;">Моё резюме</h3>
+      
       <div class="profile-section">
         <label>ФИО:</label>
-        <p id="profileFullName">-</p>
+        <input type="text" id="profileFullName" placeholder="Ваше полное имя">
       </div>
       
       <div class="profile-section">
         <label>Возраст:</label>
-        <p id="profileAge">-</p>
+        <input type="number" id="profileAge" placeholder="Ваш возраст" min="16" max="70">
       </div>
       
       <div class="profile-section">
         <label>Образование:</label>
-        <p id="profileEducation">-</p>
+        <textarea id="profileEducation" rows="3" placeholder="Ваше образование"></textarea>
       </div>
       
       <div class="profile-section">
         <label>Опыт работы:</label>
-        <p id="profileWorkExperience">-</p>
+        <textarea id="profileWorkExperience" rows="4" placeholder="Ваш опыт работы"></textarea>
       </div>
       
       <div class="profile-section">
-        <label>Навыки:</label>
-        <p id="profileSkills">-</p>
+        <label>Навыки (через запятую):</label>
+        <input type="text" id="profileSkills" placeholder="JavaScript, Python, Excel">
       </div>
+      
+      <div class="profile-section">
+        <label>Желаемая должность:</label>
+        <input type="text" id="profileDesiredPosition" placeholder="Например: Frontend разработчик">
+      </div>
+      
+      <div class="profile-section">
+        <label>Желаемый город:</label>
+        <select id="profileDesiredLocation">
+          <option value="">Любой город</option>
+          <option value="Алматы">Алматы</option>
+          <option value="Астана">Астана</option>
+          <option value="Шымкент">Шымкент</option>
+          <option value="Караганда">Караганда</option>
+        </select>
+      </div>
+      
+      <button onclick="saveStudentProfile()" class="btn-primary" style="width: 100%; margin-top: 20px;">Сохранить резюме</button>
     </div>
     
     <!-- Профиль работодателя -->
@@ -107,6 +127,8 @@
           <option value="Полная занятость">Полная занятость</option>
           <option value="Частичная занятость">Частичная занятость</option>
           <option value="Стажировка">Стажировка</option>
+          <option value="Проектная работа">Проектная работа</option>
+          <option value="Удаленная работа">Удаленная работа</option>
         </select>
       </div>
       
