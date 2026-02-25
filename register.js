@@ -34,6 +34,7 @@ async function register(email, password, role, fullName) {
   const user = userCredential.user;
   
   await setDoc(doc(db, "users", user.uid), {
+    uid: user.uid,
     email: email,
     role: role,
     fullName: fullName,
@@ -41,8 +42,7 @@ async function register(email, password, role, fullName) {
     education: "",
     workExperience: "",
     skills: [],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    createdAt: new Date()
   });
   
   return user;

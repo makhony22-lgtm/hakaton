@@ -7,40 +7,68 @@
 </head>
 <body class="main-page">
 
-<header class="main-header">
-  <div class="logo-section">
-    <img src="media/logo.png" alt="Jumys AI" class="logo-img">
-    <span class="brand-name">Jumys AI</span>
+<!-- Hero Section with Background -->
+<section class="hero-section" id="hero">
+  <header class="hero-header">
+    <div class="logo-section">
+      <img src="media/logo.png" alt="Jumys AI" class="logo-img">
+      <span class="brand-name">Jumys AI</span>
+    </div>
+    <nav class="hero-nav" id="heroNav">
+      <a href="#vacancies" class="nav-link">Главная страница</a>
+      <button onclick="location.href='login.html'" class="btn-secondary">Войти</button>
+      <button onclick="location.href='register.html'" class="btn-primary">Регистрация</button>
+    </nav>
+  </header>
+  
+  <div class="hero-content">
+    <h1 class="hero-title">Найдите работу своей мечты</h1>
+    <p class="hero-description">
+      Jumys AI - платформа для поиска вакансий и стажировок в Казахстане. 
+      Мы помогаем студентам найти первую работу, а работодателям - талантливых специалистов.
+    </p>
+    <div class="hero-buttons">
+      <button onclick="location.href='register.html'" class="btn-hero-primary">Начать поиск работы</button>
+      <a href="#vacancies" class="btn-hero-secondary">Смотреть вакансии</a>
+    </div>
   </div>
   
-  <div class="search-section">
-    <input type="text" id="searchBar" placeholder="Поиск вакансий..." />
-    <select id="filterLocation">
-      <option value="">Все города</option>
-      <option value="Алматы">Алматы</option>
-      <option value="Астана">Астана</option>
-      <option value="Шымкент">Шымкент</option>
-      <option value="Караганда">Караганда</option>
-    </select>
-    <select id="filterEmploymentType">
-      <option value="">Тип занятости</option>
-      <option value="Полная занятость">Полная занятость</option>
-      <option value="Частичная занятость">Частичная занятость</option>
-      <option value="Стажировка">Стажировка</option>
-      <option value="Проектная работа">Проектная работа</option>
-      <option value="Удаленная работа">Удаленная работа</option>
-    </select>
+  <div class="scroll-indicator">
+    <a href="#vacancies">
+      <span>↓</span>
+      <p>Листайте вниз</p>
+    </a>
   </div>
-  
-  <div class="user-section" id="userSection">
-    <button onclick="location.href='login.html'" class="btn-secondary">Войти</button>
-    <button onclick="location.href='register.html'" class="btn-primary">Регистрация</button>
-  </div>
-</header>
+</section>
 
-<main class="content">
-  <div class="cards" id="cards"></div>
-</main>
+<!-- Vacancies Section -->
+<section class="vacancies-section" id="vacancies">
+  <div class="container">
+    <header class="section-header">
+      <h2>Актуальные вакансии</h2>
+      <div class="search-section">
+        <input type="text" id="searchBar" placeholder="Поиск вакансий..." />
+        <select id="filterLocation">
+          <option value="">Все города</option>
+          <option value="Алматы">Алматы</option>
+          <option value="Астана">Астана</option>
+          <option value="Шымкент">Шымкент</option>
+          <option value="Караганда">Караганда</option>
+        </select>
+        <select id="filterEmploymentType">
+          <option value="">Тип занятости</option>
+          <option value="Полная занятость">Полная занятость</option>
+          <option value="Частичная занятость">Частичная занятость</option>
+          <option value="Стажировка">Стажировка</option>
+          <option value="Проектная работа">Проектная работа</option>
+          <option value="Удаленная работа">Удаленная работа</option>
+        </select>
+      </div>
+    </header>
+    
+    <div class="cards" id="cards"></div>
+  </div>
+</section>
 
 <script type="module" src="./main.js"></script>
 </body>

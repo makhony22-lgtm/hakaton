@@ -6,7 +6,7 @@ const cards = document.getElementById("cards");
 const searchBar = document.getElementById("searchBar");
 const filterLocation = document.getElementById("filterLocation");
 const filterEmploymentType = document.getElementById("filterEmploymentType");
-const userSection = document.getElementById("userSection");
+const heroNav = document.getElementById("heroNav");
 
 let allJobs = [];
 let currentUser = null;
@@ -54,7 +54,7 @@ function renderJobs(jobs) {
   
   // Сортируем вакансии по совпадению навыков для студентов
   let sortedJobs = [...jobs];
-  if (currentUserProfile && currentUserProfile.role === "Student" && currentUserProfile.skills) {
+  if (currentUserProfile && currentUserProfile.role === "student" && currentUserProfile.skills) {
     sortedJobs = sortedJobs.map(job => ({
       ...job,
       matchScore: calculateMatchScore(job, currentUserProfile.skills)
@@ -70,14 +70,24 @@ function renderJobs(jobs) {
       ? `<div class="match-badge">Совпадений: ${job.matchScore}</div>` 
       : '';
     
+    const category = job.category ? `<p class="job-category">📚 ${job.category}</p>` : '';
+    const experience = job.experience ? `<p class="job-experience">💼 ${job.experience}</p>` : '';
+    const education = job.education ? `<p class="job-education">🎓 ${job.education}</p>` : '';
+    const district = job.district ? `, ${job.district}` : '';
+    const publishedDate = job.publishedDate ? `<p class="job-date">📅 Опубликовано ${job.publishedDate}</p>` : '';
+    
     cards.innerHTML += `
       <div class="card job-card ${job.matchScore > 0 ? 'recommended' : ''}">
         ${matchBadge}
         <h3 class="job-title">${job.title || 'Без названия'}</h3>
         <p class="company-name">${job.company || '-'}</p>
-        <p class="location">📍 ${job.location || '-'}</p>
+        ${category}
         <p class="salary">💰 ${job.salaryRange || '-'}</p>
+        <p class="location">📍 ${job.location || '-'}${district}</p>
+        ${experience}
         <p class="employment-type">⏰ ${job.employmentType || '-'}</p>
+        ${education}
+        ${publishedDate}
         <div class="requirements">${requirements}</div>
       </div>
     `;
@@ -141,32 +151,31 @@ async function loadUserProfile(userId) {
 }
 
 onAuthStateChanged(auth, async (user) => {
-  currentUser = user;
-  
   if (user) {
     currentUserProfile = await loadUserProfile(user.uid);
     
-    let userButtons = `
-      <div class="user-info" onclick="location.href='account.html'" style="cursor: pointer;">
-        <span>👤 ${user.email}</span>
-      </div>
-      <button onclick="logout()" class="btn-primary">Выйти</button>
-    `;
-    
-    // Показываем кнопку "Добавить вакансию" только для работодателей
-    if (currentUserProfile && currentUserProfile.role === "Employer") {
-      userButtons = `
-        <button onclick="location.href='account.html'" class="btn-secondary">Добавить вакансию</button>
-        <div class="user-info" onclick="location.href='account.html'" style="cursor: pointer;">
-          <span>👤 ${user.email}</span>
-        </div>
-        <button onclick="logout()" class="btn-primary">Выйти</button>
+    // Обновляем навигацию для авторизованных пользователей
+    if (currentUserProfile && currentUserProfile.role === "employer") {
+      // Для работодателя показываем кнопку добавления вакансии
+      heroNav.innerHTML = `
+        <a href="#vacancies" class="nav-link">Главная страница</a>
+        <button onclick="location.href='add-job.html'" class="btn-primary" style="background: var(--green) !important; box-shadow: 0 4px 12px var(--green03) !important;">+ Добавить вакансию</button>
+        <button onclick="location.href='account.html'" class="btn-secondary">Профиль</button>
+        <button onclick="logout()" class="btn-secondary">Выйти</button>
+      `;
+    } else {
+      // Для студента обычная навигация
+      heroNav.innerHTML = `
+        <a href="#vacancies" class="nav-link">Главная страница</a>
+        <button onclick="location.href='account.html'" class="btn-secondary">Профиль</button>
+        <button onclick="logout()" class="btn-secondary">Выйти</button>
       `;
     }
-    
-    userSection.innerHTML = userButtons;
   } else {
-    userSection.innerHTML = `
+    currentUserProfile = null;
+    // Для неавторизованных пользователей
+    heroNav.innerHTML = `
+      <a href="#vacancies" class="nav-link">Главная страница</a>
       <button onclick="location.href='login.html'" class="btn-secondary">Войти</button>
       <button onclick="location.href='register.html'" class="btn-primary">Регистрация</button>
     `;
