@@ -14,7 +14,7 @@ let currentUserProfile = null;
 
 async function loadJobs() {
   try {
-    const querySnapshot = await getDocs(collection(db, "jobs"));
+    const querySnapshot = await getDocs(collection(db, "vacancies"));
     allJobs = [];
     querySnapshot.forEach((doc) => {
       allJobs.push({ id: doc.id, ...doc.data() });
@@ -52,43 +52,26 @@ function renderJobs(jobs) {
     return;
   }
   
-  // Сортируем вакансии по совпадению навыков для студентов
-  let sortedJobs = [...jobs];
-  if (currentUserProfile && currentUserProfile.role === "student" && currentUserProfile.skills) {
-    sortedJobs = sortedJobs.map(job => ({
-      ...job,
-      matchScore: calculateMatchScore(job, currentUserProfile.skills)
-    })).sort((a, b) => b.matchScore - a.matchScore);
-  }
+  // Сортируем вакансии по дате создания (новые первыми)
+  let sortedJobs = [...jobs].sort((a, b) => {
+    if (a.createdAt && b.createdAt) {
+      return b.createdAt.seconds - a.createdAt.seconds;
+    }
+    return 0;
+  });
   
   sortedJobs.forEach(job => {
-    const requirements = job.requirements && job.requirements.length > 0
-      ? job.requirements.map(req => `<span class="tag">${req}</span>`).join('')
+    const createdDate = job.createdAt 
+      ? new Date(job.createdAt.seconds * 1000).toLocaleDateString("ru-RU")
       : '';
     
-    const matchBadge = job.matchScore > 0 
-      ? `<div class="match-badge">Совпадений: ${job.matchScore}</div>` 
-      : '';
-    
-    const category = job.category ? `<p class="job-category">📚 ${job.category}</p>` : '';
-    const experience = job.experience ? `<p class="job-experience">💼 ${job.experience}</p>` : '';
-    const education = job.education ? `<p class="job-education">🎓 ${job.education}</p>` : '';
-    const district = job.district ? `, ${job.district}` : '';
-    const publishedDate = job.publishedDate ? `<p class="job-date">📅 Опубликовано ${job.publishedDate}</p>` : '';
+    const publishedDate = createdDate ? `<p class="job-date">📅 Опубликовано ${createdDate}</p>` : '';
     
     cards.innerHTML += `
-      <div class="card job-card ${job.matchScore > 0 ? 'recommended' : ''}">
-        ${matchBadge}
+      <div class="card job-card">
         <h3 class="job-title">${job.title || 'Без названия'}</h3>
-        <p class="company-name">${job.company || '-'}</p>
-        ${category}
-        <p class="salary">💰 ${job.salaryRange || '-'}</p>
-        <p class="location">📍 ${job.location || '-'}${district}</p>
-        ${experience}
-        <p class="employment-type">⏰ ${job.employmentType || '-'}</p>
-        ${education}
+        <p class="job-description">${job.description || '-'}</p>
         ${publishedDate}
-        <div class="requirements">${requirements}</div>
       </div>
     `;
   });
@@ -101,20 +84,9 @@ function searchJobs(query, locationFilter, employmentTypeFilter) {
     const lowerQuery = query.toLowerCase();
     filtered = filtered.filter(job => {
       const matchesTitle = job.title && job.title.toLowerCase().includes(lowerQuery);
-      const matchesCompany = job.company && job.company.toLowerCase().includes(lowerQuery);
-      const matchesRequirements = job.requirements && job.requirements.some(req => 
-        req.toLowerCase().includes(lowerQuery)
-      );
-      return matchesTitle || matchesCompany || matchesRequirements;
+      const matchesDescription = job.description && job.description.toLowerCase().includes(lowerQuery);
+      return matchesTitle || matchesDescription;
     });
-  }
-  
-  if (locationFilter) {
-    filtered = filtered.filter(job => job.location === locationFilter);
-  }
-  
-  if (employmentTypeFilter) {
-    filtered = filtered.filter(job => job.employmentType === employmentTypeFilter);
   }
   
   renderJobs(filtered);

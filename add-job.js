@@ -1,8 +1,10 @@
-import { auth, db } from "./firebase.js";
+import { db, auth } from "./firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { collection, addDoc, doc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const submitJobBtn = document.getElementById("submitJob");
+const titleInput = document.getElementById("vacancyTitle");
+const descriptionInput = document.getElementById("vacancyDescription");
+const addBtn = document.getElementById("addVacancyBtn");
 
 // Проверка авторизации и роли
 onAuthStateChanged(auth, async (user) => {
@@ -21,56 +23,33 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-submitJobBtn.addEventListener("click", async () => {
-  const title = document.getElementById("jobTitle").value.trim();
-  const category = document.getElementById("jobCategory").value.trim();
-  const salaryRange = document.getElementById("jobSalary").value.trim();
-  const location = document.getElementById("jobLocation").value;
-  const district = document.getElementById("jobDistrict").value.trim();
-  const experience = document.getElementById("jobExperience").value;
-  const employmentType = document.getElementById("jobEmploymentType").value;
-  const education = document.getElementById("jobEducation").value;
-  const description = document.getElementById("jobDescription").value.trim();
-  const requirementsInput = document.getElementById("jobRequirements").value.trim();
-  
-  // Валидация обязательных полей
-  if (!title || !category || !salaryRange || !location || !experience || !employmentType || !education) {
-    alert("Пожалуйста, заполните все обязательные поля (отмечены *)");
+addBtn.addEventListener("click", async () => {
+  const title = titleInput.value.trim();
+  const description = descriptionInput.value.trim();
+
+  if (!title || !description) {
+    alert("Заполните все поля");
     return;
   }
-  
-  // Обработка навыков
-  const requirements = requirementsInput 
-    ? requirementsInput.split(",").map(req => req.trim()).filter(req => req.length > 0)
-    : [];
-  
+
   try {
-    const user = auth.currentUser;
-    const userDoc = await getDoc(doc(db, "users", user.uid));
-    const userData = userDoc.data();
-    
-    // Создаем вакансию
-    await addDoc(collection(db, "jobs"), {
-      title,
-      category,
-      salaryRange,
-      location,
-      district,
-      experience,
-      employmentType,
-      education,
-      description,
-      requirements,
-      company: userData.companyName || "Не указано",
-      employerId: user.uid,
-      createdAt: serverTimestamp(),
-      publishedDate: new Date().toLocaleDateString("ru-RU")
+    await addDoc(collection(db, "vacancies"), {
+      title: title,
+      description: description,
+      ownerId: auth.currentUser.uid, // сохраняем UID работодателя
+      createdAt: serverTimestamp()
     });
+
+    alert("Вакансия успешно добавлена!");
+    titleInput.value = "";
+    descriptionInput.value = "";
     
-    alert("Вакансия успешно опубликована!");
-    window.location.href = "index.html";
+    // Перенаправляем на главную страницу
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1000);
   } catch (error) {
-    console.error("Ошибка при добавлении вакансии:", error);
-    alert("Ошибка при публикации вакансии: " + error.message);
+    console.error("Ошибка добавления вакансии:", error);
+    alert(error.message);
   }
 });
